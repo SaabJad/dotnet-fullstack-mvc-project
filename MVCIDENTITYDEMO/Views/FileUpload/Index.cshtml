@@ -1,0 +1,108 @@
+@{
+    ViewData["Title"] = "File Upload";
+}
+
+<div class="container mt-4">
+    <h2><i class="bi bi-cloud-upload"></i> Secure File Upload</h2>
+    <p class="text-muted">Upload images and documents securely</p>
+    <hr />
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-upload"></i> Upload New File
+                </div>
+                <div class="card-body">
+                    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select File</label>
+                            <input type="file" class="form-control" id="file" name="file" required 
+                                   accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt" />
+                            <div class="form-text">
+                                Allowed types: Images (JPG, PNG, GIF), Documents (PDF, DOC, DOCX, TXT)<br />
+                                Maximum size: 10 MB (5 MB for images)
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fileType" class="form-label">File Category</label>
+                            <select class="form-select" id="fileType" name="fileType">
+                                <option value="General">General</option>
+                                <option value="ProductImage">Product Image</option>
+                                <option value="ProfilePicture">Profile Picture</option>
+                                <option value="Document">Document</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload"></i> Upload File
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-shield-check"></i> Security Features
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            File type validation (extension and content)
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            File size limits enforced
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            Malware scanning
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            Unique filename generation
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            EXIF metadata removal from images
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            Automatic image resizing
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            User authorization checks
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            Audit logging of all operations
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

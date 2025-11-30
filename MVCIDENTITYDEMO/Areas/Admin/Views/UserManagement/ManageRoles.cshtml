@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Manage User Roles";
+    var userId = ViewBag.UserId as string;
+    var userName = ViewBag.UserName as string;
+    var userRoles = ViewBag.UserRoles as List<string>;
+    var allRoles = ViewBag.AllRoles as List<string>;
+}
+
+<div class="container mt-4">
+    <h2>Manage Roles for: @userName</h2>
+    <hr />
+
+    <form asp-action="ManageRoles" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="userId" value="@userId" />
+
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-shield-check"></i> Select Roles
+            </div>
+            <div class="card-body">
+                @foreach (var role in allRoles)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                               name="selectedRoles" value="@role" 
+                               id="role_@role" 
+                               @(userRoles.Contains(role) ? "checked" : "") />
+                        <label class="form-check-label" for="role_@role">
+                            @role
+                        </label>
+                    </div>
+                }
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>

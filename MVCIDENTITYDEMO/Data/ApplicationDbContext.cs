@@ -16,7 +16,8 @@ namespace MVCIDENTITYDEMO.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
+        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -41,6 +42,12 @@ namespace MVCIDENTITYDEMO.Data
 
             builder.Entity<OrderItem>()
                 .HasOne(oi => oi.Product);
+
+            builder.Entity<UploadedFile>()
+                .HasOne(f => f.UploadedByUser)
+                .WithMany(u => u.UploadedFiles)
+                .HasForeignKey(f => f.UploadedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCIDENTITYDEMO.Data;
 using MVCIDENTITYDEMO.Models;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MVCIDENTITYDEMO.Controllers
 {
+    [Authorize(Roles = "Admin")] // Only admins can manage products
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;

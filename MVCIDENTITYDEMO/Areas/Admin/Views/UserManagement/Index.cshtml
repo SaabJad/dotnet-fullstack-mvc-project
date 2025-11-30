@@ -1,0 +1,89 @@
+@model IEnumerable<MVCIDENTITYDEMO.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>User Management</h2>
+            <p class="text-muted">Manage all registered users and their roles</p>
+            <hr />
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-people"></i> All Users</span>
+                    <a asp-action="AuditLogs" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-clock-history"></i> View Audit Logs
+                    </a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Email Confirmed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="badge bg-success">Confirmed</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Not Confirmed</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@user.Id" 
+                                           class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        <a asp-action="ManageRoles" asp-route-id="@user.Id" 
+                                           class="btn btn-sm btn-warning">
+                                            <i class="bi bi-shield"></i> Roles
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@user.Id" 
+                                              method="post" class="d-inline" 
+                                              onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCIDENTITYDEMO.Controllers.API;
 using MVCIDENTITYDEMO.Data;
 using MVCIDENTITYDEMO.Models;
 using MVCIDENTITYDEMO.Models.ViewModels;
@@ -9,6 +12,7 @@ using System.Linq;
 
 public class HomeController : Controller
 {
+ 
     private readonly ApplicationDbContext _context;
 
     public HomeController(ApplicationDbContext context)

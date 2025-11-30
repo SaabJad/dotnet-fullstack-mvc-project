@@ -21,13 +21,14 @@ namespace MVCIDENTITYDEMO.Controllers
             string cartId = User.Identity.Name;
             var cartItems = _cartService.GetCartItems(cartId);
 
-      
+          
             ViewBag.CartCount = _cartService.GetCartItemCount(cartId);
 
             return View(cartItems);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddToCart(int productId)
         {
            
@@ -48,6 +49,7 @@ namespace MVCIDENTITYDEMO.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RemoveFromCart(int cartItemId)
         {
             try
@@ -65,6 +67,7 @@ namespace MVCIDENTITYDEMO.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateQuantity(int cartItemId, int quantity)
         {
             try
@@ -90,6 +93,7 @@ namespace MVCIDENTITYDEMO.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ClearCart()
         {
             string cartId = User.Identity.Name;

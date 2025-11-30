@@ -92,7 +92,7 @@ public static class DataSeeder
                         Price = 1099.99m,
                         Stock = 50,
                         CategoryId = 2, 
-                        ImageUrl = "/images/products/galaxys23.jpg"
+                        ImageUrl = "/images/products/iphone15.jpg"
                     },
                     new Product
                     {

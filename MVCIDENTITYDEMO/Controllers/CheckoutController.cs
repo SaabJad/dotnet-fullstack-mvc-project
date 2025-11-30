@@ -45,6 +45,7 @@ public class CheckoutController : Controller
 
     [Authorize]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
     {
         if (!ModelState.IsValid)
@@ -100,6 +101,7 @@ public class CheckoutController : Controller
 
     [Authorize]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult ProcessStripePayment(PaymentViewModel model)
     {
         // Process payment with Stripe API

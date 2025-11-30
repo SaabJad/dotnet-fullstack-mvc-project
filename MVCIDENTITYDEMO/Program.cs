@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVCIDENTITYDEMO.Data;
 using MVCIDENTITYDEMO.Models;
 using MVCIDENTITYDEMO.Services;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http.Features;
+using System;
 
 public class Program
 {
@@ -39,9 +43,57 @@ public class Program
         builder.Services.AddScoped<ICartService, CartService>();
         builder.Services.AddScoped<IOrderService, OrderService>();
 
+        builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+        builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+
         builder.Services.AddControllersWithViews();
+
+        // Request size & form limits
+        builder.Services.Configure<FormOptions>(options =>
+        {
+            options.ValueLengthLimit = 4096; // Max 4KB for form values
+            options.MultipartBodyLengthLimit = 10485760; // Max 10MB for file uploads
+            options.MultipartHeadersLengthLimit = 16384;
+        });
+
+        // Add request size limits for Kestrel
+        builder.WebHost.ConfigureKestrel(serverOptions =>
+        {
+            serverOptions.Limits.MaxRequestBodySize = 10485760; // 10 MB
+            serverOptions.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(1);
+        });
+
         builder.Services.AddRazorPages();
 
+        builder.Services.AddAuthorization(options =>
+        {
+            // Admin-only policy
+            options.AddPolicy("AdminOnly", policy =>
+                policy.RequireRole("Admin"));
+
+            // Require authenticated user
+            options.AddPolicy("RequireAuth", policy =>
+                policy.RequireAuthenticatedUser());
+
+            // Custom policy for managing users
+            options.AddPolicy("CanManageUsers", policy =>
+                policy.RequireRole("Admin", "SuperAdmin"));
+        });
+
+        // Add rate limiting to prevent brute force
+        builder.Services.AddMemoryCache();
+        builder.Services.Configure<IpRateLimitOptions>(options =>
+        {
+            options.GeneralRules = new List<RateLimitRule>
+    {
+        new RateLimitRule
+        {
+            Endpoint = "*",
+            Limit = 100,
+            Period = "1m"
+        }
+    };
+        });
         var app = builder.Build();
 
         await InitializeDatabase(app);
@@ -55,14 +107,21 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
-
+        // creates Https 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.UseRouting();
 
+        // Request validation middleware
+        app.UseMiddleware<MVCIDENTITYDEMO.Middleware.RequestValidationMiddleware>();
+
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
             name: "default",

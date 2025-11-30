@@ -1,6 +1,45 @@
 ﻿.vs/
+.vscode/
+.idea/
+
+# Build outputs
 bin/
 obj/
+publish/
+artifacts/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and test results
+*.log
+TestResults/
+
+# NuGet
+*.nupkg
+packages/
+
+# Local app settings and secrets (don't commit secrets)
 appsettings.json
 appsettings.Development.json
+secrets.json
 Properties/launchSettings.json
+
+# Uploaded runtime files
+Uploads/
+uploads/
+
+# Database files
+*.db
+*.sqlite
+*.mdf
+
+# VS Code workspace
+*.code-workspace

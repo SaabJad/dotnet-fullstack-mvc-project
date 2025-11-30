@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace MVCIDENTITYDEMO.Controllers.API
 {
     [ApiController]
-
+    [Authorize(Roles = "Admin")]
     [IgnoreAntiforgeryToken]
     [Route("api/[controller]")]
     public class AdminController : ControllerBase
