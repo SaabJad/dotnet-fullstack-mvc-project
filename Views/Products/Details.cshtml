@@ -1,0 +1,62 @@
+﻿@model MVCIDENTITYDEMO.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/products/default.jpg" : Model.ImageUrl)"
+                     class="card-img-top img-fluid" alt="@Model.Name"
+                     style="object-fit: contain; height: 400px;">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h1 class="mb-3">@Model.Name</h1>
+
+            @if (Model.Category != null)
+            {
+                <p class="text-muted">
+                    <span class="badge bg-secondary">@Model.Category.Name</span>
+                </p>
+            }
+
+            <h3 class="text-primary mb-4">$@Model.Price.ToString("0.00")</h3>
+
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p>@Model.Description</p>
+            </div>
+
+            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="mb-3">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+            </form>
+
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Products
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Description != null && !string.IsNullOrEmpty(Model.Description))
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Description</h5>
+                    </div>
+                    <div class="card-body">
+                        @Html.Raw(Model.Description)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

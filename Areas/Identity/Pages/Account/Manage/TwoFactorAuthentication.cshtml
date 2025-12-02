@@ -1,0 +1,40 @@
+﻿@page
+@model TwoFactorAuthenticationModel
+@{
+    ViewData["Title"] = "Two-factor authentication (2FA)";
+    ViewData["ActivePage"] = "TwoFactorAuthentication";
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<h3>@ViewData["Title"]</h3>
+
+@if (!string.IsNullOrEmpty(Model.AuthenticatorUri))
+{
+    <h4>Scan this QR code in your Authenticator app</h4>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=@Model.AuthenticatorUri&size=200x200" />
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="AuthenticatorCode" class="form-label">Enter 6-digit code</label>
+            <input asp-for="AuthenticatorCode" class="form-control" />
+            <span asp-validation-for="AuthenticatorCode" class="text-danger"></span>
+        </div>
+        <button type="submit" asp-page-handler="VerifyAuthenticatorCode" class="btn btn-primary">Verify</button>
+    </form>
+}
+else
+{
+    <form method="post" asp-page-handler="EnableAuthenticator">
+        <button type="submit" class="btn btn-primary">Enable Authenticator</button>
+    </form>
+}
+
+@if (Model.Is2faEnabled)
+{
+    <h4>Recovery codes</h4>
+    <p>Recovery codes left: @Model.RecoveryCodesLeft</p>
+    <a asp-page="./GenerateRecoveryCodes" class="btn btn-secondary">Generate new recovery codes</a>
+    <form method="post" style="display:inline;">
+        <button type="submit" asp-page-handler="ForgetBrowser" class="btn btn-secondary">Forget this browser</button>
+    </form>
+    <a asp-page="./Disable2fa" class="btn btn-danger">Disable 2FA</a>
+}

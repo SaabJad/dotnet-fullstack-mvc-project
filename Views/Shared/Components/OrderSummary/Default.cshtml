@@ -1,0 +1,19 @@
+﻿@model MVCIDENTITYDEMO.Models.ViewModels.CheckoutViewModel
+
+<div class="order-summary">
+    <h4>Order Summary</h4>
+    <table class="table">
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
+            </tr>
+        }
+        <tr class="total">
+            <td colspan="2">Total:</td>
+            <td>@Model.TotalAmount.ToString("C")</td>
+        </tr>
+    </table>
+</div>
